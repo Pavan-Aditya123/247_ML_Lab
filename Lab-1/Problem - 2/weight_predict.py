@@ -1,5 +1,6 @@
 import pandas as pd
 from sklearn.linear_model import LinearRegression
+import matplotlib.pyplot as plt
 
 # Dataset
 data = {
@@ -19,20 +20,37 @@ df['Gender'] = df['Gender'].map({'Male': 1, 'Female': 0})
 X = df[['Height', 'Age', 'Gender']]
 y = df['Weight']
 
-# Linear Regression Model
+# Train Linear Regression Model
 model = LinearRegression()
 model.fit(X, y)
 
-# Output coefficients
+# Predict for all entries
+y_pred = model.predict(X)
+
+# Print model results
 print("\n--- Linear Regression Model Results ---")
 print(f"Intercept: {model.intercept_:.2f}")
 print("Coefficients:")
 print(f"  Height: {model.coef_[0]:.2f}")
 print(f"  Age:    {model.coef_[1]:.2f}")
 print(f"  Gender: {model.coef_[2]:.2f}")
+print("-----------------------------------------")
 
-# Predict sample
+# Predict for one sample
 sample = [[1.75, 30, 1]]  # Height, Age, Gender (Male)
-pred = model.predict(sample)
-print(f"\nPredicted Weight for [1.75m, 30yrs, Male]: {pred[0]:.2f} kg")
-print("-----------------------------------------\n")
+sample_pred = model.predict(sample)
+print(f"Predicted Weight for [1.75m, 30yrs, Male]: {sample_pred[0]:.2f} kg")
+
+# Plot actual vs predicted
+plt.figure(figsize=(8, 4))
+plt.plot(y.values, label='Actual Weight', marker='o', color='orange')
+plt.plot(y_pred, label='Predicted Weight', marker='x', color='orangered')
+plt.title("Actual vs Predicted Body Weights")
+plt.xlabel("Sample Index")
+plt.ylabel("Weight (kg)")
+plt.legend()
+plt.tight_layout()
+
+# Save plot
+plt.savefig("body_weight_prediction_plot.png")
+plt.show()
